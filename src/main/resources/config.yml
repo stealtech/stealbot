@@ -1,0 +1,7 @@
+# Stealbot Configuration
+discord:
+  enabled: true
+  token: YOUR_DISCORD_BOT_TOKEN_HERE
+  prefix: "-"
+  guild-id: YOUR_DISCORD_SERVER_ID_HERE
+  status-message: "Minecraft Server"

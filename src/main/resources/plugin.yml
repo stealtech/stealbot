@@ -1,0 +1,24 @@
+name: Stealbot
+version: '1.0-SNAPSHOT'
+main: org.stealtech.stealbot.Stealbot
+api-version: '1.21'
+
+commands:
+  discord:
+    description: Manage the Discord bot
+    usage: /discord [reload|status|setstatus]
+    permission: stealbot.discord.use
+
+permissions:
+  stealbot.discord.use:
+    description: Allow using basic Discord commands
+    default: true
+  stealbot.discord.reload:
+    description: Allow reloading the Discord bot
+    default: op
+  stealbot.discord.status:
+    description: Allow checking Discord bot status
+    default: true
+  stealbot.discord.setstatus:
+    description: Allow setting the Discord bot status message
+    default: op

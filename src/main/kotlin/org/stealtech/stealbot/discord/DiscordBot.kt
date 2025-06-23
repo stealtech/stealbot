@@ -84,7 +84,7 @@ class DiscordBot(private val plugin: JavaPlugin) {
     private fun sendServerStatus(message: Message) {
         val onlinePlayers = plugin.server.onlinePlayers.size
         val maxPlayers = plugin.server.maxPlayers
-        val tps = plugin.server.tps[0] // Get short term TPS
+        val tps = plugin.server.tps[0]
 
         val statusMessage = """
             **Server Status**

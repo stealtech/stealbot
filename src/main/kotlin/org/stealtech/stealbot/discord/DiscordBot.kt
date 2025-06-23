@@ -35,17 +35,11 @@ class DiscordBot(private val plugin: JavaPlugin) {
             val client = DiscordClient.create(token)
             client.login().subscribe { gateway ->
                 clientRef.set(gateway)
-
                 setActivity(config.statusMessage)
-
                 messageListener = gateway.on(MessageCreateEvent::class.java)
                     .filter { event -> event.message.content.startsWith(config.prefix) }
                     .subscribe { event -> handleCommand(event) }
-
-                // Log success
                 logger.info("Discord bot has started and logged in successfully!")
-
-                // Add a hook to disconnect when the client is disposed
                 gateway.onDisconnect().subscribe { logger.info("Discord bot disconnected") }
             }
         } catch (e: Exception) {
@@ -71,8 +65,6 @@ class DiscordBot(private val plugin: JavaPlugin) {
     private fun handleCommand(event: MessageCreateEvent) {
         val message = event.message
         val content = message.content
-
-        // Parse command and arguments
         val parts = content.substring(config.prefix.length).split("\\s+".toRegex(), 2)
         val command = parts[0].lowercase()
         val args = if (parts.size > 1) parts[1] else ""

@@ -23,6 +23,9 @@ class DiscordConfig(private val plugin: JavaPlugin) {
     // Bot status
     val enabled: Boolean
         get() = config.getBoolean("discord.enabled", false)
+    // Server IP
+    val serverIp: String
+        get() = config.getString("discord.server-ip") ?: "play.server.com"
     fun load() {
         plugin.saveDefaultConfig()
         config = plugin.config

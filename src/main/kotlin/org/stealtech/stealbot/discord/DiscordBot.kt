@@ -9,7 +9,10 @@ import discord4j.core.`object`.presence.ClientPresence
 import org.bukkit.plugin.java.JavaPlugin
 import org.slf4j.LoggerFactory
 import reactor.core.Disposable
+import discord4j.core.spec.EmbedCreateSpec
+import discord4j.rest.util.Color
 import reactor.core.publisher.Mono
+import java.time.Instant
 import java.util.concurrent.atomic.AtomicReference
 
 
@@ -71,7 +74,7 @@ class DiscordBot(private val plugin: JavaPlugin) {
 
         when (command) {
             "ping" -> sendPing(message)
-            "status" -> sendServerStatus(message)
+            "status", "server" -> sendServerStatus(message)
             "help" -> sendHelp(message)
             // more commands when ready
         }
@@ -85,22 +88,30 @@ class DiscordBot(private val plugin: JavaPlugin) {
         val onlinePlayers = plugin.server.onlinePlayers.size
         val maxPlayers = plugin.server.maxPlayers
         val tps = plugin.server.tps[0]
+        val serverIp = config.serverIp
 
-        val statusMessage = """
-            **Server Status**
-            Players: $onlinePlayers/$maxPlayers
-            TPS: ${String.format("%.2f", tps)}
-        """.trimIndent()
+        val embed = EmbedCreateSpec.builder()
+            .color(Color.GREEN)
+            .title("Server Information")
+            .description("Current Information about the Minecraft server")
+            .addField("Players", "$onlinePlayers/$maxPlayers", true)
+            .addField("TPS", String.format("%.2f", tps), true)
+            .addField("Server IP", serverIp, true)
+            .thumbnail("https://mc-api.net/v3/server/favicon/${serverIp.replace(":", "_")}")
+            .footer("StealBot", null)
+            .build()
+
 
         message.channel.flatMap { channel ->
-            channel.createMessage(statusMessage)
+            channel.createMessage()
+                .withEmbeds(embed)
         }.subscribe()
     }
     private fun sendHelp(message: Message) {
         val helpMessage = """
             **Available Commands**
             `${config.prefix}ping` - Check if the bot is responding
-            `${config.prefix}status` - Show server status
+            `${config.prefix}status` or '${config.prefix}server - Show server information
             `${config.prefix}help` - Show this help message
         """.trimIndent()
 
